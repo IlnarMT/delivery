@@ -1,9 +1,9 @@
 package tm.ilnar.delivery.core.domain.model.kernel;
 
-import ddd.ValueObject;
-import errs.GeneralErrors;
-import errs.Error;
-import errs.Result;
+import libs.ddd.ValueObject;
+import libs.errs.GeneralErrors;
+import libs.errs.Error;
+import libs.errs.Result;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

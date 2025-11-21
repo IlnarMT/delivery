@@ -1,4 +1,4 @@
-package errs;
+package libs.errs;
 import java.util.UUID;
 
 public final class GeneralErrors {

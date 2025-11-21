@@ -1,4 +1,4 @@
-package errs;
+package libs.errs;
 
 import java.util.Objects;
 import java.util.function.Function;
