@@ -1,7 +1,7 @@
 package tm.ilnar.delivery.core.domain.model.kernel;
 
-import errs.Error;
-import errs.Result;
+import libs.errs.Error;
+import libs.errs.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
