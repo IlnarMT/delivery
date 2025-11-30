@@ -46,6 +46,10 @@ public class StoragePlace extends Entity<UUID> {
         return Objects.nonNull(orderId);
     }
 
+    public boolean hasEnoughCapacityFor(int volume) {
+        return volume <= totalVolume;
+    }
+
     public UnitResult<Error> canStore(int volume) {
         if (volume <= 0) {
             return UnitResult.failure(GeneralErrors.valueIsInvalid("volume", "must be greater than 0"));
