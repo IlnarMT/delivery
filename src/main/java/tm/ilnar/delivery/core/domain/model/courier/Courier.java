@@ -5,6 +5,7 @@ import libs.errs.Error;
 import libs.errs.GeneralErrors;
 import libs.errs.Result;
 import libs.errs.UnitResult;
+import lombok.Getter;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 
@@ -12,9 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Getter
 public class Courier extends Aggregate<UUID> {
 
-    private static final int MIN_SPEED = 1;
+    private static final int MIN_SPEED = 0;
     private static final String BAG_STORAGE_PLACE_NAME = "bag";
     private static final int BAG_STORAGE_PLACE_VOLUME = 10;
 
@@ -67,10 +69,10 @@ public class Courier extends Aggregate<UUID> {
         if (order == null) {
             return UnitResult.failure(GeneralErrors.valueIsRequired("order"));
         }
-        return UnitResult.from(findAvailableStoragePlaceFor(order.getVolume()));
+        return UnitResult.from(findAvailableStoragePlace(order.getVolume()));
     }
 
-    private Result<StoragePlace, Error> findAvailableStoragePlaceFor(int volume) {
+    private Result<StoragePlace, Error> findAvailableStoragePlace(int volume) {
         boolean anyFits = storagePlaces.stream()
             .anyMatch(storagePlace -> storagePlace.hasEnoughCapacityFor(volume));
         if (!anyFits) {
@@ -90,7 +92,7 @@ public class Courier extends Aggregate<UUID> {
         if (canTakeOrderResult.isFailure()) {
             return canTakeOrderResult;
         }
-        Result<StoragePlace, Error> storagePlaceResult = findAvailableStoragePlaceFor(order.getVolume());
+        Result<StoragePlace, Error> storagePlaceResult = findAvailableStoragePlace(order.getVolume());
         if (storagePlaceResult.isFailure()) {
             return UnitResult.failure(storagePlaceResult.getError());
         }
@@ -148,19 +150,18 @@ public class Courier extends Aggregate<UUID> {
     }
 
     public static class Errors {
-        public static Error noAvailableStoragePlace() {
-            return Error.of("courier.no.available.storage.place", "no available storage place");
-        }
+        private static final String CLASS_NAME = Order.class.getSimpleName().toLowerCase();
 
         public static Error cannotFindOrder() {
-            return Error.of("courier.cannot.find.order", "can't find order");
+            return Error.of(CLASS_NAME + ".courier.cannot.find.order", "can't find order");
         }
 
         public static Error noFreeStoragePlace() {
-            return Error.of("courier.no.free.storage.place", "no free storage place");
+            return Error.of(CLASS_NAME + ".courier.no.free.storage.place", "no free storage place");
         }
+
         public static Error noStoragePlaceFitsVolume() {
-            return Error.of("courier.no.storage.place.fits.volume", "no storage place fits volume");
+            return Error.of(CLASS_NAME + ".courier.no.storage.place.fits.volume", "no storage place fits volume");
         }
     }
 }

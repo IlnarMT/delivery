@@ -6,7 +6,6 @@ import libs.errs.GeneralErrors;
 import libs.errs.Result;
 import libs.errs.UnitResult;
 import lombok.Getter;
-import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 
 import java.util.UUID;
@@ -14,7 +13,7 @@ import java.util.UUID;
 @Getter
 public class Order extends Aggregate<UUID> {
 
-    private static final int MIN_VOLUME = 1;
+    private static final int MIN_VOLUME = 0;
 
     private Location location;
 
@@ -69,14 +68,16 @@ public class Order extends Aggregate<UUID> {
     }
 
     public static class Errors {
+        private static final String CLASS_NAME = Order.class.getSimpleName().toLowerCase();
+
         public static Error orderMustBeAssigned() {
-            return Error.of("order.must.be.assigned", "Заказ должен быть назначен на курьера");
+            return Error.of( CLASS_NAME + ".order.must.be.assigned", "Заказ должен быть назначен на курьера");
         }
         public static Error orderAlreadyAssigned() {
-            return Error.of("order.already.assigned", "Заказ уже назначен на курьера");
+            return Error.of(CLASS_NAME + ".order.already.assigned", "Заказ уже назначен на курьера");
         }
         public static Error orderAlreadyCompleted() {
-            return Error.of("order.already.completed", "Заказ уже завершён");
+            return Error.of(CLASS_NAME + ".order.already.completed", "Заказ уже завершён");
         }
     }
 }

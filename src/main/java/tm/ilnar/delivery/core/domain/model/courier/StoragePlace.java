@@ -24,8 +24,8 @@ public class StoragePlace extends Entity<UUID> {
     private StoragePlace() {
     }
 
-    private StoragePlace(UUID uuid, String name, int totalVolume) {
-        super(uuid);
+    private StoragePlace(UUID id, String name, int totalVolume) {
+        super(id);
         this.name = name;
         this.totalVolume = totalVolume;
         this.orderId = null;
