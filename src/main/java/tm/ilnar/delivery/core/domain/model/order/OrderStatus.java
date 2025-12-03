@@ -9,17 +9,7 @@ public enum OrderStatus {
     ASSIGNED("ASSIGNED"),
     COMPLETED("COMPLETED");
 
-    //
     private final String name;
-
-/*    public static Status fromValue(String value) {
-            for (Status status : Status.values()) {
-                if (status.name.equals(value)) {
-                    return status;
-                }
-            }
-            throw new IllegalArgumentException("Unsupported payer type " + name);
-    }*/
 
     public static OrderStatus fromValue(String value) {
         return OrderStatus.valueOf(value.toUpperCase());
