@@ -46,7 +46,7 @@ public final class UnitResult<E> {
         return success();
     }
 
-    public static <E> UnitResult<E> from(Result<Void, E> result) {
+    public static <E> UnitResult<E> from(Result<?, E> result) {
         return result.isSuccess()
                 ? UnitResult.success()
                 : UnitResult.failure(result.getError());
