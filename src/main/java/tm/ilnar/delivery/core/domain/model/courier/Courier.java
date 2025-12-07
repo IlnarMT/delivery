@@ -10,7 +10,9 @@ import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Getter
@@ -65,39 +67,33 @@ public class Courier extends Aggregate<UUID> {
         return UnitResult.success();
     }
 
-    public UnitResult<Error> canTakeOrder(Order order) {
+    public Result<Boolean, Error> canTakeOrder(Order order) {
         if (order == null) {
-            return UnitResult.failure(GeneralErrors.valueIsRequired("order"));
+            return Result.failure(GeneralErrors.valueIsRequired("order"));
         }
-        return UnitResult.from(findAvailableStoragePlace(order.getVolume()));
+        return findAvailableStoragePlace(order.getVolume())
+            .map(storagePlace -> Result.<Boolean, Error>success(Boolean.TRUE))
+            .orElse(Result.success(Boolean.FALSE));
     }
 
-    private Result<StoragePlace, Error> findAvailableStoragePlace(int volume) {
-        boolean anyFits = storagePlaces.stream()
-            .anyMatch(storagePlace -> storagePlace.hasEnoughCapacityFor(volume));
-        if (!anyFits) {
-            return Result.failure(Errors.noStoragePlaceFitsVolume());
-        }
-
+    private Optional<StoragePlace> findAvailableStoragePlace(int volume) {
         return storagePlaces.stream()
-            .filter(storagePlace -> !storagePlace.isOccupied())
-            .filter(storagePlace -> storagePlace.hasEnoughCapacityFor(volume))
-            .findFirst()
-            .map(Result::<StoragePlace, Error>success)
-            .orElseGet(() -> Result.failure(Errors.noFreeStoragePlace()));
+            .filter(storagePlace -> storagePlace.hasEnoughCapacityFor(volume) && !storagePlace.isOccupied())
+            .min(Comparator.comparing(StoragePlace::getId));
     }
 
     public UnitResult<Error> takeOrder(Order order) {
-        UnitResult<Error> canTakeOrderResult = this.canTakeOrder(order);
+        Result<Boolean, Error> canTakeOrderResult = this.canTakeOrder(order);
         if (canTakeOrderResult.isFailure()) {
-            return canTakeOrderResult;
+            return UnitResult.failure(canTakeOrderResult.getError());
         }
-        Result<StoragePlace, Error> storagePlaceResult = findAvailableStoragePlace(order.getVolume());
-        if (storagePlaceResult.isFailure()) {
-            return UnitResult.failure(storagePlaceResult.getError());
+        if (!canTakeOrderResult.getValue()) {
+            return UnitResult.failure(Errors.cannotTakeOrder());
         }
-        StoragePlace storagePlace = storagePlaceResult.getValue();
-        return storagePlace.store(order.getId(), order.getVolume());
+
+        return findAvailableStoragePlace(order.getVolume())
+            .map(storagePlace -> storagePlace.store(order.getId(), order.getVolume()))
+            .orElse(UnitResult.failure(Errors.noFreeStoragePlace()));
     }
 
     public UnitResult<Error> completeOrder(UUID orderId) {
@@ -150,18 +146,18 @@ public class Courier extends Aggregate<UUID> {
     }
 
     public static class Errors {
-        private static final String CLASS_NAME = Order.class.getSimpleName().toLowerCase();
+        private static final String CLASS_NAME = "courier";
 
         public static Error cannotFindOrder() {
-            return Error.of(CLASS_NAME + ".courier.cannot.find.order", "can't find order");
+            return Error.of(CLASS_NAME + ".cannot.find.order", "can't find order");
         }
 
         public static Error noFreeStoragePlace() {
-            return Error.of(CLASS_NAME + ".courier.no.free.storage.place", "no free storage place");
+            return Error.of(CLASS_NAME + ".no.free.storage.place", "no free storage place");
         }
 
-        public static Error noStoragePlaceFitsVolume() {
-            return Error.of(CLASS_NAME + ".courier.no.storage.place.fits.volume", "no storage place fits volume");
+        public static Error cannotTakeOrder() {
+            return Error.of(CLASS_NAME + ".cannot.take.order", "can't take order");
         }
     }
 }

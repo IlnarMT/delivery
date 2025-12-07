@@ -1,5 +1,8 @@
 package libs.errs;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 public final class UnitResult<E> {
     private final boolean isSuccess;
     private final E error;
@@ -46,7 +49,12 @@ public final class UnitResult<E> {
         return success();
     }
 
-    public static <E> UnitResult<E> from(Result<?, E> result) {
+    public <T> Result<T, E> flatMapToResult(Supplier<Result<T, E>> next) {
+        if (isFailure()) return Result.failure(error);
+        return Objects.requireNonNull(next, "next").get();
+    }
+
+    public static <E> UnitResult<E> from(Result<Void, E> result) {
         return result.isSuccess()
                 ? UnitResult.success()
                 : UnitResult.failure(result.getError());
@@ -56,6 +64,12 @@ public final class UnitResult<E> {
         return isFailure()
                 ? Result.failure(error)
                 : Result.success();
+    }
+
+    public <T> Result<T, E> toResult(T value) {
+        return isFailure()
+            ? Result.failure(error)
+            : Result.success(value);
     }
 
     @Override
