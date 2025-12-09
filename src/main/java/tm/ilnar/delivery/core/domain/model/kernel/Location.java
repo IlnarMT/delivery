@@ -4,6 +4,7 @@ import libs.ddd.ValueObject;
 import libs.errs.GeneralErrors;
 import libs.errs.Error;
 import libs.errs.Result;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ import java.util.List;
 import static java.lang.Math.abs;
 
 @Getter
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Location extends ValueObject<Location> {
 
     private static final int X_MIN_VALUE = 1;

@@ -95,10 +95,11 @@ class CourierTest {
         Order order = createOrder(3);
 
         // Act
-        UnitResult<Error> result = sut.canTakeOrder(order);
+        Result<Boolean, Error> result = sut.canTakeOrder(order);
 
         // Assert
         assertThat(result.isSuccess()).isTrue();
+        assertThat(result.getValue()).isTrue();
     }
 
     @Test
@@ -107,7 +108,7 @@ class CourierTest {
         Courier sut = createCourier();
 
         // Act
-        UnitResult<Error> result = sut.canTakeOrder(null);
+        Result<Boolean, Error> result = sut.canTakeOrder(null);
 
         // Assert
         assertThat(result.isFailure()).isTrue();
