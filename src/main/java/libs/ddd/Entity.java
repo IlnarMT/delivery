@@ -1,9 +1,14 @@
 package libs.ddd;
 
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+
 import java.util.Objects;
 
+@MappedSuperclass
 public abstract class Entity<TId extends Comparable<TId>> implements Comparable<Entity<TId>> {
 
+    @Id
     protected TId id;
 
     protected Entity() {

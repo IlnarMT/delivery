@@ -1,5 +1,7 @@
 package tm.ilnar.delivery.core.domain.model.courier;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 import libs.ddd.Entity;
 import libs.errs.Error;
 import libs.errs.GeneralErrors;
@@ -10,18 +12,24 @@ import lombok.Getter;
 import java.util.Objects;
 import java.util.UUID;
 
+@jakarta.persistence.Entity
+@Table(name = "storage_place")
 @Getter
 public class StoragePlace extends Entity<UUID> {
 
     private static final int MIN_TOTAL_VOLUME = 1;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "total_volume")
     private int totalVolume;
 
+    @Column(name = "order_id")
     private UUID orderId;
 
-    private StoragePlace() {
+    protected StoragePlace() {
+        // for JPA
     }
 
     private StoragePlace(UUID id, String name, int totalVolume) {

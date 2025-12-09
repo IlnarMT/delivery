@@ -1,0 +1,1 @@
+TRUNCATE TABLE storage_place, courier, orders

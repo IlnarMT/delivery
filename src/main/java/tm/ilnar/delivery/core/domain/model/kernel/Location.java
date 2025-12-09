@@ -1,5 +1,7 @@
 package tm.ilnar.delivery.core.domain.model.kernel;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 import libs.ddd.ValueObject;
 import libs.errs.GeneralErrors;
 import libs.errs.Error;
@@ -12,6 +14,7 @@ import java.util.List;
 
 import static java.lang.Math.abs;
 
+@Embeddable
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Location extends ValueObject<Location> {
@@ -21,10 +24,13 @@ public class Location extends ValueObject<Location> {
     private static final int Y_MIN_VALUE = 1;
     private static final int Y_MAX_VALUE = 10;
 
+    @Column(name = "location_x")
     private int x;
+    @Column(name = "location_y")
     private int y;
 
-    private Location() {
+    protected Location() {
+        // for JPA
     }
 
     public static Result<Location, Error> create(int x, int y) {

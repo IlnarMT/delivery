@@ -1,5 +1,12 @@
 package tm.ilnar.delivery.core.domain.model.courier;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import libs.ddd.Aggregate;
 import libs.errs.Error;
 import libs.errs.GeneralErrors;
@@ -15,6 +22,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Entity
+@Table(name = "courier")
 @Getter
 public class Courier extends Aggregate<UUID> {
 
@@ -22,15 +31,20 @@ public class Courier extends Aggregate<UUID> {
     private static final String BAG_STORAGE_PLACE_NAME = "bag";
     private static final int BAG_STORAGE_PLACE_VOLUME = 10;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "speed")
     private int speed;
 
     private Location location;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "courier_id", nullable = false)
     private final List<StoragePlace> storagePlaces = new ArrayList<>();
 
-    private Courier() {
+    protected Courier() {
+        // for JPA
     }
 
     private Courier(UUID id, String name, int speed, Location location, StoragePlace storagePlace) {
