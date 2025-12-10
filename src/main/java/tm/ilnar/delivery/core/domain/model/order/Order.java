@@ -1,5 +1,8 @@
 package tm.ilnar.delivery.core.domain.model.order;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import libs.ddd.Aggregate;
 import libs.errs.Error;
 import libs.errs.GeneralErrors;
@@ -10,6 +13,8 @@ import tm.ilnar.delivery.core.domain.model.kernel.Location;
 
 import java.util.UUID;
 
+@Entity
+@Table(name = "orders")
 @Getter
 public class Order extends Aggregate<UUID> {
 
@@ -17,13 +22,17 @@ public class Order extends Aggregate<UUID> {
 
     private Location location;
 
+    @Column(name = "volume")
     private int volume;
 
+    @Column(name = "status")
     private OrderStatus status;
 
+    @Column(name = "courier_id")
     private UUID courierId;
 
-    private Order() {
+    protected Order() {
+        // for JPA
     }
 
     private Order(UUID id, Location location, int volume, UUID courierId) {

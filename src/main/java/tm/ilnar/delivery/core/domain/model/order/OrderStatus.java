@@ -9,13 +9,13 @@ public enum OrderStatus {
     ASSIGNED("ASSIGNED"),
     COMPLETED("COMPLETED");
 
-    private final String name;
+    private final String value;
 
     public static OrderStatus fromValue(String value) {
         return OrderStatus.valueOf(value.toUpperCase());
     }
 
     public String toValue() {
-        return name().toLowerCase();
+        return value.toLowerCase();
     }
 }
