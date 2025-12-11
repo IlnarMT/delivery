@@ -3,6 +3,8 @@ package tm.ilnar.delivery.core.domain.model.order;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.util.Arrays;
+
 @Getter
 @AllArgsConstructor
 public enum OrderStatus {
@@ -14,6 +16,9 @@ public enum OrderStatus {
     private final String value;
 
     public static OrderStatus fromValue(String value) {
-        return OrderStatus.valueOf(value);
+        return Arrays.stream(OrderStatus.values())
+            .filter(status -> status.getValue().equals(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Unknown OrderStatus value: "+ value));
     }
 }
