@@ -28,11 +28,11 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Optional<Order> findAnyByStatus(OrderStatus orderStatus) {
-        return orderJpaRepository.findAnyByStatus(orderStatus.toValue());
+        return orderJpaRepository.findAnyByStatus(orderStatus.getValue());
     }
 
     @Override
     public List<Order> findAllByStatus(OrderStatus orderStatus) {
-        return orderJpaRepository.findAllByStatus(orderStatus.toValue());
+        return orderJpaRepository.findAllByStatus(orderStatus.getValue());
     }
 }

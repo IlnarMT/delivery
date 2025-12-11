@@ -12,7 +12,7 @@ public class OrderStatusConverter implements AttributeConverter<OrderStatus, Str
         if (attribute == null) {
             throw new IllegalStateException("OrderStatus is null");
         }
-        return attribute.toValue();
+        return attribute.getValue();
     }
 
     @Override
