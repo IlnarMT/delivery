@@ -1,21 +1,24 @@
 package tm.ilnar.delivery.core.domain.model.order;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+import java.util.Arrays;
+
+@Getter
 @AllArgsConstructor
 public enum OrderStatus {
 
-    CREATED("CREATED"),
-    ASSIGNED("ASSIGNED"),
-    COMPLETED("COMPLETED");
+    CREATED("created"),
+    ASSIGNED("assigned"),
+    COMPLETED("completed");
 
     private final String value;
 
     public static OrderStatus fromValue(String value) {
-        return OrderStatus.valueOf(value.toUpperCase());
-    }
-
-    public String toValue() {
-        return value.toLowerCase();
+        return Arrays.stream(OrderStatus.values())
+            .filter(status -> status.getValue().equals(value))
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("Unknown OrderStatus value: "+ value));
     }
 }

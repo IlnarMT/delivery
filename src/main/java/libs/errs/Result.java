@@ -62,6 +62,11 @@ public class Result<T, E> {
         return Result.failure(error);
     }
 
+    public UnitResult<E> flatMapToUnit(Function<? super T, UnitResult<E>> mapper) {
+        if (isSuccess) return mapper.apply(value);
+        return UnitResult.failure(error);
+    }
+
     public Result<T, E> onFailure(Function<? super E, ?> handler) {
         if (!isSuccess) handler.apply(error);
         return this;
