@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.5.7'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id "org.openapi.generator" version "7.1.0"
 }
 
 group = 'tm.ilnar'
@@ -21,22 +22,89 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-quartz'
 	implementation 'org.liquibase:liquibase-core'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.14'
+	implementation 'org.openapitools:jackson-databind-nullable:0.2.2'
+	implementation "org.mapstruct:mapstruct:1.5.5.Final"
+	//implementation 'javax.validation:validation-api:2.0.1.Final'
 	runtimeOnly 'org.postgresql:postgresql'
 	compileOnly 'org.projectlombok:lombok:1.18.42'
 	annotationProcessor 'org.projectlombok:lombok:1.18.42'
+	annotationProcessor "org.mapstruct:mapstruct-processor:1.5.5.Final"
+	compileOnly "org.projectlombok:lombok:1.18.42"
+	annotationProcessor "org.projectlombok:lombok:1.18.42"
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
 	testImplementation platform('org.testcontainers:testcontainers-bom:2.0.2')
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+def openApiSpecFile = layout.buildDirectory.file("openapi/delivery-openapi.yml")
+
+tasks.register("downloadOpenApiSpec") {
+	outputs.file(openApiSpecFile)
+
+	doLast {
+		def target = openApiSpecFile.get().asFile
+		target.parentFile.mkdirs()
+
+		def url = new URL("https://gitlab.com/microarch-ru/ddd-in-practice/system-design/-/raw/main/services/delivery/contracts/openapi.yml")
+		target.withOutputStream { out ->
+			url.openStream().withCloseable { it.transferTo(out) }
+		}
+	}
+}
+
+def openApiOutDir = layout.buildDirectory.dir("generated-sources/openapi")
+
+openApiGenerate {
+	generatorName = "spring"
+	inputSpec = openApiSpecFile.get().asFile.absolutePath
+	outputDir = openApiOutDir.get().asFile.absolutePath
+
+	apiPackage = "tm.ilnar.delivery.adapters.in.http.openapi.api"
+	modelPackage = "tm.ilnar.delivery.adapters.in.http.openapi.model"
+
+	validateSpec = false
+
+	configOptions = [
+			interfaceOnly        : "true",
+			skipDefaultInterface : "true",
+			useTags              : "true",
+			useJakartaEe         : "true"
+	]
+
+	globalProperties = [
+			apis			: "",
+			models			: "",
+			supportingFiles : "false",
+			apiTests        : "false",
+			modelTests      : "false"
+	]
+}
+
+tasks.named("openApiGenerate") {
+	dependsOn(tasks.named("downloadOpenApiSpec"))
+}
+
+sourceSets {
+	main {
+		java {
+			srcDir(openApiOutDir.map { it.dir("src/main/java").asFile })
+		}
+	}
+}
+
+tasks.named("compileJava") {
+	dependsOn(tasks.named("openApiGenerate"))
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
-	environment "DOCKER_HOST", "tcp://198.18.227.139:2375"
 }

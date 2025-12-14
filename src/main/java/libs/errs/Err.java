@@ -11,6 +11,12 @@ public final class Err {
     private Err() {
     }
 
+    // Object
+    public static UnitResult<Error> againstNull(Object value, String paramName) {
+        if (value == null) return UnitResult.failure(GeneralErrors.valueIsRequired(paramName));
+        return UnitResult.success();
+    }
+
     // String
     public static UnitResult<Error> againstNullOrEmpty(String value, String paramName) {
         if (value == null || value.isBlank()) return UnitResult.failure(GeneralErrors.valueIsRequired(paramName));

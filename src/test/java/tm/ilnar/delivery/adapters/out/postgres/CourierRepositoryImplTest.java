@@ -7,6 +7,7 @@ import org.springframework.test.context.jdbc.Sql;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.courier.StoragePlace;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.kernel.Speed;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.ports.CourierRepository;
 
@@ -30,7 +31,7 @@ class CourierRepositoryImplTest extends BasePostgresContainerTest {
     @Test
     void saveAndFindCourierById() {
         // Arrange
-        Courier courier = Courier.create("Ivan", 1, DEFAULT_LOCATION).getValue();
+        Courier courier = Courier.create("Ivan", Speed.create(1).getValue(), DEFAULT_LOCATION).getValue();
 
         // Act
         sut.save(courier);
@@ -41,7 +42,7 @@ class CourierRepositoryImplTest extends BasePostgresContainerTest {
         Courier loadedCourier = loaded.get();
         assertThat(loadedCourier.getId()).isNotNull();
         assertThat(loadedCourier.getName()).isEqualTo("Ivan");
-        assertThat(loadedCourier.getSpeed()).isEqualTo(1);
+        assertThat(loadedCourier.getSpeed()).isEqualTo(Speed.create(1).getValue());
         assertThat(loadedCourier.getLocation()).isEqualTo(DEFAULT_LOCATION);
         List<StoragePlace> storagePlaces = loadedCourier.getStoragePlaces();
         assertThat(storagePlaces.size()).isEqualTo(1);
@@ -52,10 +53,10 @@ class CourierRepositoryImplTest extends BasePostgresContainerTest {
     @Test
     void findAllWithFreeStorage() {
         // Arrange
-        Courier courier1 = Courier.create("Ivan", 1, DEFAULT_LOCATION).getValue();
+        Courier courier1 = Courier.create("Ivan", Speed.create(1).getValue(), DEFAULT_LOCATION).getValue();
         sut.save(courier1);
 
-        Courier courier2 = Courier.create("Igor", 2, DEFAULT_LOCATION).getValue();
+        Courier courier2 = Courier.create("Igor", Speed.create(2).getValue(), DEFAULT_LOCATION).getValue();
         Order order = Order.create(UUID.randomUUID(), DEFAULT_LOCATION, 5).getValue();
         courier2.takeOrder(order);
         sut.save(courier2);

@@ -7,6 +7,7 @@ import libs.errs.UnitResult;
 import org.junit.jupiter.api.Test;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.kernel.Speed;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 
 import java.util.List;
@@ -121,6 +122,6 @@ class OrderDispatcherImplTest {
 
     private static Courier createCourierAt(int x, int y) {
         Location location = createLocation(x, y);
-        return Courier.create("Ivan", 1, location).getValue();
+        return Courier.create("Ivan", Speed.create(1).getValue(), location).getValue();
     }
 }

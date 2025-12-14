@@ -4,6 +4,7 @@ import libs.errs.Error;
 import libs.errs.UnitResult;
 import org.junit.jupiter.api.Test;
 import tm.ilnar.delivery.core.domain.model.order.Order;
+import tm.ilnar.delivery.core.domain.services.LocationGeneratorImpl;
 import tm.ilnar.delivery.core.ports.OrderRepository;
 
 import java.util.Optional;
@@ -20,7 +21,8 @@ import static org.mockito.Mockito.when;
 class CreateOrderCommandHandlerImplTest {
 
     private final OrderRepository orderRepository = mock(OrderRepository.class);
-    private final CreateOrderCommandHandlerImpl sut = new CreateOrderCommandHandlerImpl(orderRepository);
+    private final CreateOrderCommandHandlerImpl sut = new CreateOrderCommandHandlerImpl(
+        orderRepository, new LocationGeneratorImpl());
 
     @Test
     void shouldCreateNewOrderWhenOrderDoesNotExist() {

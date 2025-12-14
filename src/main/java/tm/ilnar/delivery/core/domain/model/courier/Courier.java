@@ -14,6 +14,7 @@ import libs.errs.Result;
 import libs.errs.UnitResult;
 import lombok.Getter;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.kernel.Speed;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 
 import java.util.ArrayList;
@@ -27,15 +28,13 @@ import java.util.UUID;
 @Getter
 public class Courier extends Aggregate<UUID> {
 
-    private static final int MIN_SPEED = 0;
     private static final String BAG_STORAGE_PLACE_NAME = "bag";
     private static final int BAG_STORAGE_PLACE_VOLUME = 10;
 
     @Column(name = "name")
     private String name;
 
-    @Column(name = "speed")
-    private int speed;
+    private Speed speed;
 
     private Location location;
 
@@ -47,7 +46,7 @@ public class Courier extends Aggregate<UUID> {
         // for JPA
     }
 
-    private Courier(UUID id, String name, int speed, Location location, StoragePlace storagePlace) {
+    private Courier(UUID id, String name, Speed speed, Location location, StoragePlace storagePlace) {
         super(id);
         this.name = name;
         this.speed = speed;
@@ -55,12 +54,12 @@ public class Courier extends Aggregate<UUID> {
         this.storagePlaces.add(storagePlace);
     }
 
-    public static Result<Courier, Error> create(String name, int speed, Location location) {
+    public static Result<Courier, Error> create(String name, Speed speed, Location location) {
         if (name == null || name.isBlank()) {
             return Result.failure(GeneralErrors.valueIsRequired("name"));
         }
-        if (speed < MIN_SPEED) {
-            return Result.failure(GeneralErrors.valueIsInvalid("speed", "must be >= " + MIN_SPEED));
+        if (speed == null) {
+            return Result.failure(GeneralErrors.valueIsEmpty("speed"));
         }
         if (location == null) {
             return Result.failure(GeneralErrors.valueIsRequired("location"));
@@ -128,7 +127,7 @@ public class Courier extends Aggregate<UUID> {
             return Result.failure(GeneralErrors.valueIsRequired("targetLocation"));
         }
         int distanceTo = this.location.distanceTo(targetLocation);
-        double time = (double) distanceTo / speed;
+        double time = (double) distanceTo / speed.getSpeed();
         return Result.success(time);
     }
 
@@ -139,7 +138,7 @@ public class Courier extends Aggregate<UUID> {
 
         int difX = target.getX() - location.getX();
         int difY = target.getY() - location.getY();
-        int cruisingRange = speed;
+        int cruisingRange = speed.getSpeed();
 
         int moveX = Math.max(-cruisingRange, Math.min(difX, cruisingRange));
         cruisingRange -= Math.abs(moveX);
