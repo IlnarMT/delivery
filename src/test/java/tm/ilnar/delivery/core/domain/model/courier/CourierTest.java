@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.kernel.Speed;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 
 import java.util.List;
@@ -22,7 +23,7 @@ class CourierTest {
     private static final Location DEFAULT_LOCATION = Location.create(5, 5).getValue();
 
     private static Courier createCourier() {
-        return Courier.create("Ivan", 1, DEFAULT_LOCATION).getValue();
+        return Courier.create("Ivan", Speed.create(1).getValue(), DEFAULT_LOCATION).getValue();
     }
 
     private static Order createOrder(int volume) {
@@ -31,10 +32,10 @@ class CourierTest {
 
     private static Stream<Arguments> invalidCourierCreateParams() {
         return Stream.of(
-            Arguments.of(null, 1, DEFAULT_LOCATION),
-            Arguments.of(" ", 1, DEFAULT_LOCATION),
-            Arguments.of("Ivan", -1, DEFAULT_LOCATION),
-            Arguments.of("Ivan", 1, null)
+            Arguments.of(null, Speed.create(1).getValue(), DEFAULT_LOCATION),
+            Arguments.of(" ", Speed.create(1).getValue(), DEFAULT_LOCATION),
+            Arguments.of("Ivan", null, DEFAULT_LOCATION),
+            Arguments.of("Ivan", Speed.create(1).getValue(), null)
         );
     }
 
@@ -44,13 +45,13 @@ class CourierTest {
         Location location = DEFAULT_LOCATION;
 
         //Act
-        Result<Courier, Error> result = Courier.create("Ivan", 1, location);
+        Result<Courier, Error> result = Courier.create("Ivan", Speed.create(1).getValue(), location);
 
         //Assert
         assertThat(result.isSuccess()).isTrue();
         assertThat(result.getValue().getId()).isNotNull();
         assertThat(result.getValue().getName()).isEqualTo("Ivan");
-        assertThat(result.getValue().getSpeed()).isEqualTo(1);
+        assertThat(result.getValue().getSpeed()).isEqualTo(Speed.create(1).getValue());
         assertThat(result.getValue().getLocation()).isEqualTo(location);
         List<StoragePlace> storagePlaces = result.getValue().getStoragePlaces();
         assertThat(storagePlaces.size()).isEqualTo(1);
@@ -60,7 +61,7 @@ class CourierTest {
 
     @ParameterizedTest
     @MethodSource("invalidCourierCreateParams")
-    void shouldReturnErrorWhenParametersAreNotCorrectOnCreated(String name, int speed, Location location) {
+    void shouldReturnErrorWhenParametersAreNotCorrectOnCreated(String name, Speed speed, Location location) {
         //Act
         Result<Courier, Error> result = Courier.create(name, speed, location);
 

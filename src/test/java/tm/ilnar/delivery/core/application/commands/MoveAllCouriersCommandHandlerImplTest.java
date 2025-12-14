@@ -5,6 +5,7 @@ import libs.errs.UnitResult;
 import org.junit.jupiter.api.Test;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.kernel.Speed;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.domain.model.order.OrderStatus;
 import tm.ilnar.delivery.core.ports.CourierRepository;
@@ -48,7 +49,7 @@ class MoveAllCouriersCommandHandlerImplTest {
     @Test
     void shouldMoveCourierAndNotCompleteOrderWhenNotArrived() {
         // Arrange
-        Courier courier = Courier.create("Ivan", 1, Location.create(7, 7).getValue()).getValue();
+        Courier courier = Courier.create("Ivan", Speed.create(1).getValue(), Location.create(7, 7).getValue()).getValue();
         Order order = Order.create(UUID.randomUUID(), Location.create(5, 5).getValue(), 7).getValue();;
         order.assign(courier.getId());
 

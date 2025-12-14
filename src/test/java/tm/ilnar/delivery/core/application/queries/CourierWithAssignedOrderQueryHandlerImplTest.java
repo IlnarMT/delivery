@@ -9,6 +9,7 @@ import org.springframework.test.context.jdbc.Sql;
 import tm.ilnar.delivery.adapters.out.postgres.BasePostgresContainerTest;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.kernel.Speed;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.ports.CourierRepository;
 
@@ -34,7 +35,7 @@ class CourierWithAssignedOrderQueryHandlerImplTest extends BasePostgresContainer
     void handle() {
         // Arrange
         Order order = Order.create(UUID.randomUUID(), Location.create(7, 7).getValue(), 3).getValue();
-        Courier courier = Courier.create("Ivan", 1, Location.create(5, 5).getValue()).getValue();
+        Courier courier = Courier.create("Ivan", Speed.create(1).getValue(), Location.create(5, 5).getValue()).getValue();
         courier.takeOrder(order);
         courierRepository.save(courier);
 
