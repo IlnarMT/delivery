@@ -5,7 +5,7 @@ import libs.errs.UnitResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tm.ilnar.delivery.core.domain.model.order.Order;
-import tm.ilnar.delivery.core.domain.services.LocationGenerator;
+import tm.ilnar.delivery.core.ports.GeoClient;
 import tm.ilnar.delivery.core.ports.OrderRepository;
 
 @Service
@@ -13,7 +13,7 @@ import tm.ilnar.delivery.core.ports.OrderRepository;
 public class CreateOrderCommandHandlerImpl implements CreateOrderCommandHandler {
 
     private final OrderRepository orderRepository;
-    private final LocationGenerator locationGenerator;
+    private final GeoClient geoClient;
 
     @Override
     public UnitResult<Error> handle(CreateOrderCommand command) {
@@ -21,7 +21,7 @@ public class CreateOrderCommandHandlerImpl implements CreateOrderCommandHandler 
             return UnitResult.success();
         }
 
-        return locationGenerator.getRandomLocation()
+        return geoClient.getLocation(command.getStreet())
             .flatMap(location -> Order.create(command.getOrderId(), location, command.getVolume()))
             .flatMapToUnit(order -> {
                 orderRepository.save(order);

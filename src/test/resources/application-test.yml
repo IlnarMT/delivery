@@ -1,0 +1,5 @@
+app:
+  grpc:
+    geo-service:
+      host: "localhost"
+      port: 6565

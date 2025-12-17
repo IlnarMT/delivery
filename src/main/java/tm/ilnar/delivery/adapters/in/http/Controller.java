@@ -54,7 +54,7 @@ public class Controller implements DefaultApi {
     @Override
     public ResponseEntity<Void> createOrder() {
         Result<CreateOrderCommand, Error> commandResult =
-            CreateOrderCommand.create(UUID.randomUUID(), "fake street", 2);
+            CreateOrderCommand.create(UUID.randomUUID(), "Айтишная", 2);
 
         if (commandResult.isFailure())
             throw new BadRequestException(commandResult.getError());

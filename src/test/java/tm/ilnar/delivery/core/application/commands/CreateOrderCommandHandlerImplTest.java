@@ -3,8 +3,9 @@ package tm.ilnar.delivery.core.application.commands;
 import libs.errs.Error;
 import libs.errs.UnitResult;
 import org.junit.jupiter.api.Test;
+import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.order.Order;
-import tm.ilnar.delivery.core.domain.services.LocationGeneratorImpl;
+import tm.ilnar.delivery.core.ports.GeoClient;
 import tm.ilnar.delivery.core.ports.OrderRepository;
 
 import java.util.Optional;
@@ -21,8 +22,9 @@ import static org.mockito.Mockito.when;
 class CreateOrderCommandHandlerImplTest {
 
     private final OrderRepository orderRepository = mock(OrderRepository.class);
+    private final GeoClient geoClient = mock(GeoClient.class);
     private final CreateOrderCommandHandlerImpl sut = new CreateOrderCommandHandlerImpl(
-        orderRepository, new LocationGeneratorImpl());
+        orderRepository, geoClient);
 
     @Test
     void shouldCreateNewOrderWhenOrderDoesNotExist() {
@@ -32,6 +34,7 @@ class CreateOrderCommandHandlerImplTest {
             CreateOrderCommand.create(orderId, "some_street", 3).getValue();
 
         when(orderRepository.findById(orderId)).thenReturn(Optional.empty());
+        when(geoClient.getLocation("some_street")).thenReturn(Location.create(1, 2));
 
         // Act
         UnitResult<Error> result = sut.handle(command);
