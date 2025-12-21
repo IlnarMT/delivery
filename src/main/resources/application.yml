@@ -17,3 +17,9 @@ spring:
     properties:
       hibernate:
         default_schema: public
+
+app:
+  grpc:
+    geo-service:
+      host: ${GEO_SERVICE_GRPC_HOST}
+      port: ${GEO_SERVICE_GRPC_PORT}
