@@ -18,8 +18,24 @@ spring:
       hibernate:
         default_schema: public
 
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST:localhost:9092}
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP:delivery-group}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
 app:
   grpc:
     geo-service:
       host: ${GEO_SERVICE_GRPC_HOST}
       port: ${GEO_SERVICE_GRPC_PORT}
+  kafka:
+    basket-events-topic: ${KAFKA_BASKETS_EVENTS_TOPIC:baskets.events}
+
