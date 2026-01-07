@@ -52,7 +52,7 @@ dependencies {
 	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation(enforcedPlatform("org.testcontainers:testcontainers-bom:2.0.3"))
+    testImplementation(enforcedPlatform("org.testcontainers:testcontainers-bom:2.0.2"))
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-postgresql'
 }

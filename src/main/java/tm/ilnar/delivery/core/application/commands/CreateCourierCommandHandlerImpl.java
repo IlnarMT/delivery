@@ -20,20 +20,20 @@ public class CreateCourierCommandHandlerImpl implements CreateCourierCommandHand
     private final LocationGenerator locationGenerator;
 
     @Override
-    public UnitResult<Error> handle(CreateCourierCommand command) {
+    public Result<Courier, Error> handle(CreateCourierCommand command) {
         Result<Location, Error> randomLocation = locationGenerator.getRandomLocation();
         if (randomLocation.isFailure()) {
-            return UnitResult.failure(randomLocation.getError());
+            return Result.failure(randomLocation.getError());
         }
 
         Result<Courier, Error> createCourierResult =
             Courier.create(command.getName(), command.getSpeed(), randomLocation.getValue());
         if (createCourierResult.isFailure()) {
-            return UnitResult.failure(createCourierResult.getError());
+            return Result.failure(createCourierResult.getError());
         }
 
         courierRepository.save(createCourierResult.getValue());
 
-        return UnitResult.success();
+        return Result.success(createCourierResult.getValue());
     }
 }

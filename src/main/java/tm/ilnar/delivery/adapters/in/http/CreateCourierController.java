@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tm.ilnar.delivery.adapters.in.http.exception.BadRequestException;
 import tm.ilnar.delivery.adapters.in.http.exception.ConflictException;
 import tm.ilnar.delivery.adapters.in.http.openapi.api.CreateCourierApi;
+import tm.ilnar.delivery.adapters.in.http.openapi.model.CreateCourierResponse;
 import tm.ilnar.delivery.adapters.in.http.openapi.model.NewCourier;
 import tm.ilnar.delivery.core.application.commands.CreateCourierCommand;
 import tm.ilnar.delivery.core.application.commands.CreateCourierCommandHandler;
@@ -21,7 +22,7 @@ public class CreateCourierController implements CreateCourierApi {
     private final CreateCourierCommandHandler createCourierCommandHandler;
 
     @Override
-    public ResponseEntity<Void> createCourier(NewCourier newCourier) {
+    public ResponseEntity<CreateCourierResponse> createCourier(NewCourier newCourier) {
         Result<CreateCourierCommand, Error> createCommandResult =
                 CreateCourierCommand.create(newCourier.getName(), newCourier.getSpeed());
 
@@ -32,6 +33,8 @@ public class CreateCourierController implements CreateCourierApi {
         if (handleResult.isFailure())
             throw new ConflictException(handleResult.getError());
 
-        return ResponseEntity.ok().build();
+        CreateCourierResponse response = new CreateCourierResponse();
+        response.setCourierId(handleResult.getValue().getId());
+        return ResponseEntity.ok(response);
     }
 }

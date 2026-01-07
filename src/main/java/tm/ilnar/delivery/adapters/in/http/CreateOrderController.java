@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import tm.ilnar.delivery.adapters.in.http.exception.BadRequestException;
 import tm.ilnar.delivery.adapters.in.http.exception.ConflictException;
 import tm.ilnar.delivery.adapters.in.http.openapi.api.CreateOrderApi;
+import tm.ilnar.delivery.adapters.in.http.openapi.model.CreateOrderResponse;
 import tm.ilnar.delivery.core.application.commands.CreateOrderCommand;
 import tm.ilnar.delivery.core.application.commands.CreateOrderCommandHandler;
 
@@ -22,7 +23,7 @@ public class CreateOrderController implements CreateOrderApi {
     private final CreateOrderCommandHandler createOrderCommandHandler;
 
     @Override
-    public ResponseEntity<Void> createOrder() {
+    public ResponseEntity<CreateOrderResponse> createOrder() {
         Result<CreateOrderCommand, Error> commandResult =
                 CreateOrderCommand.create(UUID.randomUUID(), "Айтишная", 2);
 
@@ -34,6 +35,9 @@ public class CreateOrderController implements CreateOrderApi {
         if (handleResult.isFailure())
             throw new ConflictException(handleResult.getError());
 
-        return ResponseEntity.ok().build();
+        CreateOrderResponse response = new CreateOrderResponse();
+        response.setOrderId(handleResult.getValue().getId());
+
+        return ResponseEntity.ok(response);
     }
 }

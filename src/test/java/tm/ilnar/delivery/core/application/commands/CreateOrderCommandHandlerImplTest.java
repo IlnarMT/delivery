@@ -1,7 +1,7 @@
 package tm.ilnar.delivery.core.application.commands;
 
 import libs.errs.Error;
-import libs.errs.UnitResult;
+import libs.errs.Result;
 import org.junit.jupiter.api.Test;
 import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
@@ -14,11 +14,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CreateOrderCommandHandlerImplTest {
 
@@ -40,7 +36,7 @@ class CreateOrderCommandHandlerImplTest {
         when(geoClient.getLocation("some_street")).thenReturn(Location.create(1, 2));
 
         // Act
-        UnitResult<Error> result = sut.handle(command);
+        Result<Order, Error> result = sut.handle(command);
 
         // Assert
         assertThat(result.isSuccess()).isTrue();
@@ -58,7 +54,7 @@ class CreateOrderCommandHandlerImplTest {
         when(orderRepository.findById(orderId)).thenReturn(Optional.of(existingOrder));
 
         // Act
-        UnitResult<Error> result = sut.handle(command);
+        Result<Order, Error> result = sut.handle(command);
 
         // Assert
         assertThat(result.isSuccess()).isTrue();

@@ -5,7 +5,6 @@ import libs.ddd.DomainEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
-//TODO: подумать о расположении класса
 @Component
 public class DefaultDomainEventPublisher implements DomainEventPublisher {
     private final ApplicationEventPublisher publisher;

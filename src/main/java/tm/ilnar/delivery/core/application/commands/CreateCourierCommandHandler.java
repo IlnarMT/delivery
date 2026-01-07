@@ -1,9 +1,10 @@
 package tm.ilnar.delivery.core.application.commands;
 
 import libs.errs.Error;
-import libs.errs.UnitResult;
+import libs.errs.Result;
+import tm.ilnar.delivery.core.domain.model.courier.Courier;
 
 public interface CreateCourierCommandHandler {
 
-    UnitResult<Error> handle(CreateCourierCommand command);
+    Result<Courier, Error> handle(CreateCourierCommand command);
 }
