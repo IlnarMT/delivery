@@ -78,6 +78,7 @@ public class Order extends Aggregate<UUID> {
         if (status == OrderStatus.COMPLETED)  return UnitResult.failure(Errors.orderAlreadyCompleted());
 
         this.status = OrderStatus.COMPLETED;
+
         this.raiseDomainEvent(new OrderCompletedDomainEvent(this));
         return UnitResult.success();
     }

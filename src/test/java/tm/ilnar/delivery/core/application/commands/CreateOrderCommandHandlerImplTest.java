@@ -3,6 +3,7 @@ package tm.ilnar.delivery.core.application.commands;
 import libs.errs.Error;
 import libs.errs.UnitResult;
 import org.junit.jupiter.api.Test;
+import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.ports.GeoClient;
@@ -23,8 +24,10 @@ class CreateOrderCommandHandlerImplTest {
 
     private final OrderRepository orderRepository = mock(OrderRepository.class);
     private final GeoClient geoClient = mock(GeoClient.class);
-    private final CreateOrderCommandHandlerImpl sut = new CreateOrderCommandHandlerImpl(
-        orderRepository, geoClient);
+    private final DomainEventPublisher domainEventPublisher = mock(DomainEventPublisher.class);
+
+    private final CreateOrderCommandHandlerImpl sut =
+            new CreateOrderCommandHandlerImpl(orderRepository, geoClient, domainEventPublisher);
 
     @Test
     void shouldCreateNewOrderWhenOrderDoesNotExist() {

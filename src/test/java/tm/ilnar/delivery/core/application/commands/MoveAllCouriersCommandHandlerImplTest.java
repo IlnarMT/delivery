@@ -3,6 +3,7 @@ package tm.ilnar.delivery.core.application.commands;
 import libs.errs.Error;
 import libs.errs.UnitResult;
 import org.junit.jupiter.api.Test;
+import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.kernel.Speed;
@@ -27,9 +28,10 @@ class MoveAllCouriersCommandHandlerImplTest {
 
     private final CourierRepository courierRepository = mock(CourierRepository.class);
     private final OrderRepository orderRepository = mock(OrderRepository.class);
+    private final DomainEventPublisher domainEventPublisher = mock(DomainEventPublisher.class);
 
     private final MoveAllCouriersCommandHandlerImpl sut =
-        new MoveAllCouriersCommandHandlerImpl(courierRepository, orderRepository);
+        new MoveAllCouriersCommandHandlerImpl(courierRepository, orderRepository, domainEventPublisher);
 
     @Test
     void shouldReturnSuccessWhenNoAssignedOrders() {
