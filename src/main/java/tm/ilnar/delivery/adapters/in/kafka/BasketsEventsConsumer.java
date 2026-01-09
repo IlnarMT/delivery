@@ -19,8 +19,6 @@ public class BasketsEventsConsumer {
 
     @KafkaListener(topics = "${app.kafka.basket-events-topic}")
     public void listen(byte[] message) {
-        log.info("Raw event received: {}", message);
-
         try {
             // Десериализация
             var event = BasketEventsProto.BasketConfirmedIntegrationEvent.parseFrom(message);

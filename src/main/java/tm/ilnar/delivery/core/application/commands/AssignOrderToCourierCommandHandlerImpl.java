@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.domain.model.order.OrderStatus;
@@ -25,6 +26,7 @@ public class AssignOrderToCourierCommandHandlerImpl implements AssignOrderToCour
     private final OrderRepository orderRepository;
     private final OrderDispatcher orderDispatcher;
     private final CourierRepository courierRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
     @Transactional
     @Override
@@ -51,6 +53,7 @@ public class AssignOrderToCourierCommandHandlerImpl implements AssignOrderToCour
 
         courierRepository.save(dispatchedCourier);
         orderRepository.save(order);
+        domainEventPublisher.publish(List.of(dispatchedCourier, order));
 
         return UnitResult.success();
     }

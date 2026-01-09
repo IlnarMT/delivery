@@ -65,8 +65,6 @@ class CourierRepositoryImplTest extends BasePostgresContainerTest {
 
         // Act
         List<Courier> allCouriersWithFreeStorage = sut.findAllWithFreeStorage();
-        System.out.println(sut.findById(courier1.getId()));
-        System.out.println(sut.findById(courier2.getId()));
 
         // Assert
         assertThat(allCouriersWithFreeStorage).hasSize(1);
