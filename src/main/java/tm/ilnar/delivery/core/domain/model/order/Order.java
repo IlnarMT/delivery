@@ -10,6 +10,8 @@ import libs.errs.Result;
 import libs.errs.UnitResult;
 import lombok.Getter;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
+import tm.ilnar.delivery.core.domain.model.order.events.OrderCompletedDomainEvent;
+import tm.ilnar.delivery.core.domain.model.order.events.OrderCreatedDomainEvent;
 
 import java.util.UUID;
 
@@ -53,7 +55,10 @@ public class Order extends Aggregate<UUID> {
         if (volume < MIN_VOLUME) {
             return Result.failure(GeneralErrors.valueIsInvalid("volume", "must be less than or equal to " + MIN_VOLUME));
         }
-        return Result.success(new Order(id, location, volume, null));
+
+        Order order = new Order(id, location, volume, null);
+        order.raiseDomainEvent(new OrderCreatedDomainEvent(order));
+        return Result.success(order);
     }
 
     public UnitResult<Error> assign(UUID courierId) {
@@ -73,6 +78,8 @@ public class Order extends Aggregate<UUID> {
         if (status == OrderStatus.COMPLETED)  return UnitResult.failure(Errors.orderAlreadyCompleted());
 
         this.status = OrderStatus.COMPLETED;
+
+        this.raiseDomainEvent(new OrderCompletedDomainEvent(this));
         return UnitResult.success();
     }
 

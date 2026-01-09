@@ -24,11 +24,11 @@ spring:
       group-id: ${KAFKA_CONSUMER_GROUP:delivery-group}
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.ByteArrayDeserializer
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
 
 
 app:
@@ -38,4 +38,5 @@ app:
       port: ${GEO_SERVICE_GRPC_PORT}
   kafka:
     basket-events-topic: ${KAFKA_BASKETS_EVENTS_TOPIC:baskets.events}
+    order-events-topic: ${KAFKA_ORDERS_EVENTS_TOPIC:orders.events}
 

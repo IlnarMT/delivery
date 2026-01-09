@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.domain.model.order.OrderStatus;
 import tm.ilnar.delivery.core.ports.CourierRepository;
@@ -21,6 +22,7 @@ public class MoveAllCouriersCommandHandlerImpl implements MoveAllCouriersCommand
 
     private final CourierRepository courierRepository;
     private final OrderRepository orderRepository;
+    private final DomainEventPublisher domainEventPublisher;
 
     /**
      * Стратегия: "сделать максимум возможного".
@@ -65,6 +67,7 @@ public class MoveAllCouriersCommandHandlerImpl implements MoveAllCouriersCommand
                 }
 
                 courierRepository.save(courier);
+                domainEventPublisher.publish(List.of(order));
 
                 return UnitResult.<Error>success();
             })

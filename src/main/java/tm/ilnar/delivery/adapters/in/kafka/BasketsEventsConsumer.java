@@ -1,6 +1,5 @@
 package tm.ilnar.delivery.adapters.in.kafka;
 
-import com.google.protobuf.util.JsonFormat;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,15 +16,14 @@ import java.util.UUID;
 public class BasketsEventsConsumer {
 
     private final CreateOrderCommandHandler createOrderCommandHandler;
+
     @KafkaListener(topics = "${app.kafka.basket-events-topic}")
-    public void listen(String message) {
+    public void listen(byte[] message) {
         log.info("Raw event received: {}", message);
 
         try {
             // Десериализация
-            var builder = BasketEventsProto.BasketConfirmedIntegrationEvent.newBuilder();
-            JsonFormat.parser().merge(message, builder);
-            var event = builder.build();
+            var event = BasketEventsProto.BasketConfirmedIntegrationEvent.parseFrom(message);
 
             // Создаем команду
             var createOrderCommanResult = CreateOrderCommand.create(UUID.randomUUID(), event.getAddress().getStreet(), event.getVolume());

@@ -1,9 +1,10 @@
 package tm.ilnar.delivery.core.application.commands;
 
 import libs.errs.Error;
-import libs.errs.UnitResult;
+import libs.errs.Result;
+import tm.ilnar.delivery.core.domain.model.order.Order;
 
 public interface CreateOrderCommandHandler {
 
-    UnitResult<Error> handle(CreateOrderCommand command);
+    Result<Order, Error> handle(CreateOrderCommand command);
 }
