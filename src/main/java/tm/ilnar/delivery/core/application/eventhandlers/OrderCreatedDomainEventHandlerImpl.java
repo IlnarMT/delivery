@@ -8,12 +8,11 @@ import tm.ilnar.delivery.core.ports.OrdersEventProducer;
 
 @RequiredArgsConstructor
 @Service
-public class OrderCreatedDomainEventHandlerImpl implements OrderCreatedDomainEventHandler {
+public class OrderCreatedDomainEventHandlerImpl {
 
     private final OrdersEventProducer producer;
 
     @EventListener
-    @Override
     public void handle(OrderCreatedDomainEvent event) {
         producer.publish(event);
     }
