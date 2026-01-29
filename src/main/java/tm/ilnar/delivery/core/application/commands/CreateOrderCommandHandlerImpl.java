@@ -4,6 +4,7 @@ import libs.errs.Error;
 import libs.errs.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.ports.GeoClient;
@@ -20,6 +21,7 @@ public class CreateOrderCommandHandlerImpl implements CreateOrderCommandHandler 
     private final GeoClient geoClient;
     private final DomainEventPublisher domainEventPublisher;
 
+    @Transactional
     @Override
     public Result<Order, Error> handle(CreateOrderCommand command) {
         Optional<Order> orderOpt = orderRepository.findById(command.getOrderId());

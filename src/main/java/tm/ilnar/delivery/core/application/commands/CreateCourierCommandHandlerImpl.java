@@ -2,14 +2,17 @@ package tm.ilnar.delivery.core.application.commands;
 
 import libs.errs.Error;
 import libs.errs.Result;
-import libs.errs.UnitResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tm.ilnar.delivery.DomainEventPublisher;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.services.LocationGenerator;
 import tm.ilnar.delivery.core.ports.CourierRepository;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -18,7 +21,9 @@ public class CreateCourierCommandHandlerImpl implements CreateCourierCommandHand
 
     private final CourierRepository courierRepository;
     private final LocationGenerator locationGenerator;
+    private final DomainEventPublisher domainEventPublisher;
 
+    @Transactional
     @Override
     public Result<Courier, Error> handle(CreateCourierCommand command) {
         Result<Location, Error> randomLocation = locationGenerator.getRandomLocation();
@@ -33,6 +38,7 @@ public class CreateCourierCommandHandlerImpl implements CreateCourierCommandHand
         }
 
         courierRepository.save(createCourierResult.getValue());
+        domainEventPublisher.publish(List.of(createCourierResult.getValue()));
 
         return Result.success(createCourierResult.getValue());
     }

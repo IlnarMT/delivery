@@ -1,5 +1,6 @@
 package libs.ddd;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.ApplicationEvent;
 
 import java.time.Instant;
@@ -26,7 +27,7 @@ public abstract class DomainEvent extends ApplicationEvent {
         return occurredOnUtc;
     }
 
-    //@JsonIgnore
+    @JsonIgnore
     @Override
     public Object getSource() {
         return super.getSource();
