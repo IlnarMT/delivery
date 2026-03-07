@@ -38,7 +38,7 @@ public class CreateCourierCommandHandlerImpl implements CreateCourierCommandHand
         }
 
         courierRepository.save(createCourierResult.getValue());
-        domainEventPublisher.publish(List.of(createCourierResult.getValue()));
+        domainEventPublisher.saveForPublish(List.of(createCourierResult.getValue()));
 
         return Result.success(createCourierResult.getValue());
     }

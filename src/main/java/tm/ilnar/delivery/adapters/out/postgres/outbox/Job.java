@@ -22,8 +22,8 @@ public class Job {
         for (var outboxMessage : outboxMessages) {
             try {
                 // Динамически находим класс события
-                var eventClassName = outboxMessage.getEventType();
-                var eventClass = Class.forName(eventClassName);
+                String eventClassName = outboxMessage.getEventType();
+                Class<?> eventClass = Class.forName(eventClassName);
                 var eventObject = objectMapper.readValue(outboxMessage.getPayload(), eventClass);
 
                 // Проверяем, что это DomainEvent

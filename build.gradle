@@ -53,6 +53,7 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation(enforcedPlatform("org.testcontainers:testcontainers-bom:2.0.2"))
+	testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation 'org.testcontainers:testcontainers-junit-jupiter'
     testImplementation 'org.testcontainers:testcontainers-postgresql'
 }
@@ -144,4 +145,6 @@ protobuf {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	environment "DOCKER_HOST", "tcp://198.18.227.139:2375"
+	//environment "TESTCONTAINERS_HOST_OVERRIDE", "localhost"
 }

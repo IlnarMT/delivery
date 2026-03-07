@@ -7,10 +7,11 @@ import org.springframework.stereotype.Component;
 import queues.order.OrderEventsProto;
 import tm.ilnar.delivery.core.domain.model.order.events.OrderCompletedDomainEvent;
 import tm.ilnar.delivery.core.domain.model.order.events.OrderCreatedDomainEvent;
+import tm.ilnar.delivery.core.ports.OrdersEventProducer;
 
 @Component
 @RequiredArgsConstructor
-public class OrdersEventProducer implements tm.ilnar.delivery.core.ports.OrdersEventProducer {
+public class OrdersEventProducerImpl implements OrdersEventProducer {
 
     private final KafkaTemplate<String, byte[]> kafkaTemplate;
 

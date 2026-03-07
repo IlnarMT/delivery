@@ -7,5 +7,5 @@ public interface OrdersEventProducer {
 
     void publish(OrderCreatedDomainEvent domainEvent);
 
-    void publish(OrderCompletedDomainEvent event);
+    void publish(OrderCompletedDomainEvent domainEvent);
 }

@@ -33,7 +33,7 @@ public class CreateOrderCommandHandlerImpl implements CreateOrderCommandHandler 
             .flatMap(location -> Order.create(command.getOrderId(), location, command.getVolume()))
             .flatMap(order -> {
                 orderRepository.save(order);
-                domainEventPublisher.publish(List.of(order));
+                domainEventPublisher.saveForPublish(List.of(order));
                 return Result.success(order);
             });
     }

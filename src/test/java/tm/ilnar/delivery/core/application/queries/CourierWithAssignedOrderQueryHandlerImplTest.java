@@ -4,10 +4,8 @@ import libs.errs.Error;
 import libs.errs.Result;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-import tm.ilnar.delivery.adapters.out.postgres.BasePostgresContainerTest;
+import tm.ilnar.delivery.BaseIntegrationTest;
 import tm.ilnar.delivery.core.domain.model.courier.Courier;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.kernel.Speed;
@@ -23,9 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     scripts = "classpath:/sql/cleanup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-@SpringBootTest
-@ActiveProfiles("test")
-class CourierWithAssignedOrderQueryHandlerImplTest extends BasePostgresContainerTest {
+class CourierWithAssignedOrderQueryHandlerImplTest extends BaseIntegrationTest {
 
     @Autowired
     CourierRepository courierRepository;

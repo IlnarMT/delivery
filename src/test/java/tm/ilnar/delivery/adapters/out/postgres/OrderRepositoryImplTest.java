@@ -2,9 +2,8 @@ package tm.ilnar.delivery.adapters.out.postgres;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import tm.ilnar.delivery.BaseIntegrationTest;
 import tm.ilnar.delivery.core.domain.model.kernel.Location;
 import tm.ilnar.delivery.core.domain.model.order.Order;
 import tm.ilnar.delivery.core.domain.model.order.OrderStatus;
@@ -18,9 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
     scripts = "classpath:/sql/cleanup.sql",
     executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD
 )
-@SpringBootTest
-@ActiveProfiles("test")
-class OrderRepositoryImplTest extends BasePostgresContainerTest {
+class OrderRepositoryImplTest extends BaseIntegrationTest {
 
     private static final Location DEFAULT_LOCATION = Location.create(5, 5).getValue();
 

@@ -67,7 +67,7 @@ public class MoveAllCouriersCommandHandlerImpl implements MoveAllCouriersCommand
                 }
 
                 courierRepository.save(courier);
-                domainEventPublisher.publish(List.of(order));
+                domainEventPublisher.saveForPublish(List.of(order));
 
                 return UnitResult.<Error>success();
             })

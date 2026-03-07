@@ -15,7 +15,6 @@ public class OrderCreatedDomainEvent extends DomainEvent {
     private final UUID orderId;
 
     public OrderCreatedDomainEvent(Order order) {
-        super(order);
         this.orderId = order.getId();
     }
 }

@@ -53,7 +53,7 @@ public class AssignOrderToCourierCommandHandlerImpl implements AssignOrderToCour
 
         courierRepository.save(dispatchedCourier);
         orderRepository.save(order);
-        domainEventPublisher.publish(List.of(dispatchedCourier, order));
+        domainEventPublisher.saveForPublish(List.of(dispatchedCourier, order));
 
         return UnitResult.success();
     }

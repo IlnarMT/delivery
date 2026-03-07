@@ -17,7 +17,7 @@ public class OutboxDomainEventPublisher implements DomainEventPublisher {
 
     }
 
-    public void publish(Iterable<Aggregate<?>> aggregates) {
+    public void saveForPublish(Iterable<Aggregate<?>> aggregates) {
         if (!aggregates.iterator().hasNext()) {
             return;
         }

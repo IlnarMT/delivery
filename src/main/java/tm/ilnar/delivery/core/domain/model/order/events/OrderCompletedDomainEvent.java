@@ -16,7 +16,6 @@ public class OrderCompletedDomainEvent extends DomainEvent {
     private final UUID courierId;
 
     public OrderCompletedDomainEvent(Order order) {
-        super(order);
         this.orderId = order.getId();
         this.courierId = order.getCourierId();
     }
